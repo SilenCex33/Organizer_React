@@ -1,0 +1,388 @@
+[
+  {
+    "superCategory": "Transporter / LKW",
+    "categories": [
+      {
+        "category": "Gruppe C",
+        "_comment": "Transporter klein",
+        "vehicles": [
+          {
+            "licensePlate": "KLE-DC-146",
+            "optionsHours": {
+              "1h_20km": {
+                "price": 25,
+                "freeKm": 20
+              },
+              "5h_60km": {
+                "price": 70,
+                "freeKm": 60
+              },
+              "24h_100km": {
+                "price": 120,
+                "freeKm": 100
+              },
+              "additionalHour": {
+                "price": 17.50,
+                "freeKm": 20
+              }
+            },
+            "optionsDays": {
+              "7d_1000km": {
+                "price": 600,
+                "freeKm": 1000
+              },
+              "30d_4000km": {
+                "price": 1800,
+                "freeKm": 4000
+              },
+              "additionalDay": {
+                "price": 120,
+                "freeKm": 100
+              }
+            },
+            "kmPackage": {
+              "100km": {
+                "price": 25,
+                "freeKm": 20
+              },
+              "300km": {
+                "price": 70,
+                "freeKm": 60
+              },
+              "500km": {
+                "price": 120,
+                "freeKm": 100
+              },
+              "1000km": {
+                "price": 160,
+                "freeKm": 1000
+              },
+              "additionalKm": {
+                "price": 0.25,
+                "freeKm": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "category": "Gruppe D",
+        "_comment": "Transporter groß",
+        "vehicles": [
+          {
+            "licensePlate": "KLE-PL-277",
+            "optionsHours": {
+              "1h_20km": {
+                "price": 30,
+                "freeKm": 20
+              },
+              "5h_60km": {
+                "price": 70,
+                "freeKm": 60
+              },
+              "24h_100km": {
+                "price": 130,
+                "freeKm": 100
+              },
+              "additionalHour": {
+                "price": 22.50,
+                "freeKm": 20
+              }
+            },
+            "optionsDays": {
+              "7d_1000km": {
+                "price": 650,
+                "freeKm": 1000
+              },
+              "30d_4000km": {
+                "price": 1950,
+                "freeKm": 4000
+              },
+              "additionalDay": {
+                "price": 130,
+                "freeKm": 100
+              }
+            },
+            "kmPackage": {
+              "100km": {
+                "price": 30,
+                "freeKm": 100
+              },
+              "300km": {
+                "price": 60,
+                "freeKm": 300
+              },
+              "500km": {
+                "price": 105,
+                "freeKm": 500
+              },
+              "1000km": {
+                "price": 190,
+                "freeKm": 1000
+              },
+              "additionalKm": {
+                "price": 0.30,
+                "freeKm": 1
+              }
+            }
+          }
+        ]
+      },
+      
+      {
+        "category": "LKW 3,5t",
+        "_comment": "LKW 3,5t",
+        "vehicles": [
+          {
+            "licensePlate": "KLE-PL-447",
+            "optionsHours": {
+              "1h_20km": {
+                "price": 35,
+                "freeKm": 20
+              },
+              "5h_60km": {
+                "price": 95,
+                "freeKm": 60
+              },
+              "24h_100km": {
+                "price": 160,
+                "freeKm": 100
+              },
+              "additionalHour": {
+                "price": 30.00,
+                "freeKm": 20
+              }
+            },
+            "optionsDays": {
+              "7d_1000km": {
+                "price": 800,
+                "freeKm": 1000
+              },
+              "30d_4000km": {
+                "price": 2400,
+                "freeKm": 4000
+              },
+              "additionalDay": {
+                "price": 160,
+                "freeKm": 100
+              }
+            },
+            "kmPackage": {
+              "100km": {
+                "price": 40,
+                "freeKm": 100
+              },
+              "300km": {
+                "price": 80,
+                "freeKm": 300
+              },
+              "500km": {
+                "price": 140,
+                "freeKm": 500
+              },
+              "1000km": {
+                "price": 250,
+                "freeKm": 1000
+              },
+              "additionalKm": {
+                "price": 0.40,
+                "freeKm": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "category": "LKW 7,5t",
+        "_comment": "LKW 7,5t",
+        "vehicles": [
+          {
+            "licensePlate": "KLE-PL-557",
+            "optionsHours": {
+              "1h_20km": {
+                "price": 40,
+                "freeKm": 20
+              },
+              "5h_60km": {
+                "price": 100,
+                "freeKm": 60
+              },
+              "24h_100km": {
+                "price": 225,
+                "freeKm": 100
+              },
+              "additionalHour": {
+                "price": 35.0,
+                "freeKm": 20
+              }
+            },
+            "optionsDays": {
+              "7d_1000km": {
+                "price": 1125,
+                "freeKm": 1000
+              },
+              "30d_4000km": {
+                "price": 3375,
+                "freeKm": 4000
+              },
+              "additionalDay": {
+                "price": 225,
+                "freeKm": 100
+              }
+            },
+            "kmPackage": {
+              "100km": {
+                "price": 60,
+                "freeKm": 100
+              },
+              "300km": {
+                "price": 170,
+                "freeKm": 300
+              },
+              "500km": {
+                "price": 240,
+                "freeKm": 500
+              },
+              "1000km": {
+                "price": 420,
+                "freeKm": 1000
+              },
+              "additionalKm": {
+                "price": 0.65,
+                "freeKm": 1
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "superCategory": "PKW / 9-Sitzer",
+    "categories":[
+      {
+        "category": "9-Sitzer Klein",
+        "_comment": "9-Sitzer Klein",
+        "vehicles": [
+          {
+            "licensePlate": "KLE-PL-947",
+            "sameAs": "KLE-CD-146"
+          },
+          {
+            "licensePlate": "KLE-CD-146",
+            "optionsHours": {
+              "24h_100km": {
+                "price": 140,
+                "freeKm": 250
+              }
+            },
+            "optionsDays": {
+              "7d_1000km": {
+                "price": 700,
+                "freeKm": 1000
+              },
+              "30d_4000km": {
+                "price": 2100,
+                "freeKm": 4000
+              },
+              "additionalDay": {
+                "price": 140,
+                "freeKm": 250
+              }
+            },
+            "kmPackage": {
+              "300km": {
+                "price": 75,
+                "freeKm": 300
+              },
+              "500km": {
+                "price": 100,
+                "freeKm": 500
+              },
+              "1000km": {
+                "price": 170,
+                "freeKm": 1000
+              },
+              "additionalKm": {
+                "price": 0.30,
+                "freeKm": 1
+              }
+            }
+          }
+        ]
+      },
+      {
+        "category": "9-Sitzer groß",
+        "_comment": "9-Sitzer groß",
+        "vehicles": [
+          {
+            "licensePlate": "KLE-PL-977",
+            "sameAs": "KLE-CD-146"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "superCategory": "Anhänger",
+    "categories": [
+      {
+        "category": "Plane",
+        "_comment": "Plane",
+        "vehicles": [
+          {
+            "licensePlate": "klein",
+            "optionsHours": {
+              "5h": {
+                "price": 30
+              },
+              "24h": {
+                "price": 45
+              }
+            },
+            "optionsDays": {
+              "7d": {
+                "price": 225
+              },
+              "30d": {
+                "price": 675,
+                "freeKm": 4000
+              },
+              "additionalDay": {
+                "price": 30
+              }
+            }
+          }
+        ]
+      },
+      {
+        "category": "Auto",
+        "_comment": "Autotrailer",
+        "vehicles": [
+          {
+            "licensePlate": "Trailer",
+            "optionsHours": {
+              "5h": {
+                "price": 50
+              },
+              "24h": {
+                "price": 85
+              }
+            },
+            "optionsDays": {
+              "7d": {
+                "price": 425
+              },
+              "30d": {
+                "price": 1275
+              },
+              "additionalDay": {
+                "price": 85
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

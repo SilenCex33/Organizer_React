@@ -1,0 +1,50 @@
+/* Modal-Header */
+.modal-header {
+  height: 1vh;
+  background-color: #007bff; /* Blaues Header-Hintergrund */
+  color: white; /* Weißer Text */
+  border-bottom: 2px solid #0056b3; /* Dunklerer Rand */
+  justify-items: center;
+  align-items: center;
+}
+
+/* Modal-Body */
+.modal-body {
+  background-color: #f8f9fa; /* Helles Grau */
+  padding: 20px; /* Innenabstand */
+  font-size: 16px; /* Schriftgröße */
+}
+
+/* Modal-Footer */
+.modal-footer {
+  background-color: #e9ecef; /* Leichtes Grau */
+  border-top: 1px solid #dee2e6; /* Oberer Rand */
+}
+
+/* Buttons */
+.modal-footer .btn-primary {
+  background-color: #007bff; /* Blau */
+  border-color: #0056b3; /* Dunklerer Rand */
+}
+
+.modal-footer .btn-secondary {
+  background-color: #6c757d; /* Grau */
+  border-color: #5a6268; /* Dunklerer Rand */
+}
+
+/* Zusätzliche Anpassungen */
+.modal-content {
+  border-radius: 10px; /* Abgerundete Ecken */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Schatten */
+}
+input[type="text"],
+input[type="tel"],
+input[type="number"],
+input[type="time"] {
+  background-color: white; /* Weißer Hintergrund */
+  color: black; /* Schwarzer Text */
+  border: 1px solid #ced4da; /* Standard-Border */
+  border-radius: 4px; /* Abgerundete Ecken */
+  padding: 8px; /* Innenabstand */
+  font-size: 14px; /* Schriftgröße */
+}
