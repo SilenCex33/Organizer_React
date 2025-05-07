@@ -19,13 +19,10 @@ const AdminDashboard = () => {
     <div className={`dashboard-container ${!showWelcome ? 'shift-up' : ''}`}>
       {showWelcome && (
         <p className={`welcome-text ${!showWelcome ? 'fade-out' : ''}`}>
-        Willkommen, {username}!
-      </p>
+          Willkommen, {username}!
+        </p>
       )}
-      {/* Admin spezifische Funktionen */}
-      <div className="dashboard-content">
-        <Calendar />
-      </div>
+      <Calendar /> {/* Kalender-Komponente */}
     </div>
   );
 };

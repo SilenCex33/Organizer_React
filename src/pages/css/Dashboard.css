@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'CustomFont';
+  src: url('/fonts/custom-font.woff2') format('woff2');
+  font-display: swap; /* Sofortige Anzeige mit Fallback */
+}
+
 .dashboard-container {
   width: 100%;
   height: 100vh;
@@ -16,4 +22,25 @@
   font-size: 1.2em;
   margin-bottom: 30px;
   color: black;
+}
+
+.welcome-text {
+  height: 40px; /* Feste Höhe für den Willkommens-Text */
+  line-height: 40px; /* Vertikale Zentrierung */
+  transition: opacity 0.3s ease; /* Sanftes Ausblenden */
+  opacity: 1; /* Standardmäßig sichtbar */
+}
+
+.fade-out {
+  opacity: 0; /* Text ausblenden */
+}
+
+.dashboard-content {
+  min-height: 300px; /* Mindesthöhe für den dynamischen Inhalt */
+}
+
+img {
+  width: 100px; /* Beispielbreite */
+  height: 100px; /* Beispielhöhe */
+  object-fit: cover; /* Bild anpassen */
 }
