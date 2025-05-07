@@ -6,13 +6,13 @@ import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { v4 as uuidv4 } from 'uuid'; // Importiere uuid
-import './css/Calendar.css'; // Import your custom CSS for styling
-import TerminAnlegen from './TerminAnlegen'; // Pfad anpassen, falls nötig
+import { v4 as uuidv4 } from 'uuid';
+import './css/Calendar.css';
+import TerminAnlegen from './TerminAnlegen';
 import de from 'date-fns/locale/de';
 
 const locales = {
-  de: de, // Deutsch
+  de: de,
 };
 
 const localizer = dateFnsLocalizer({
@@ -23,11 +23,9 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-// Custom Toolbar Component
 const CustomToolbar = (toolbar) => {
   const handleNavigate = (action) => {
-    console.log(`Navigating: ${action}`); // Debugging
-    toolbar.onNavigate(action); // Übergeben der Aktion
+    toolbar.onNavigate(action);
   };
 
   return (
@@ -44,12 +42,9 @@ const CustomToolbar = (toolbar) => {
         </button>
       </span>
       <span className="rbc-toolbar-label">{toolbar.label}</span>
-      
-      
     </div>
   );
 };
-
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
@@ -59,35 +54,31 @@ const Calendar = () => {
     title: '',
     start: new Date(),
     end: new Date(),
-    color: 'event-blue'
+    color: 'event-blue',
   });
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  // **Lese Termine aus dem Local Storage beim Laden der Seite**
   useEffect(() => {
     const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
     setEvents(storedEvents);
   }, []);
 
-  // **Speichere Termine im Local Storage, wenn sich die Events ändern**
   useEffect(() => {
     localStorage.setItem('events', JSON.stringify(events));
   }, [events]);
 
-  // Handler für Slot-Auswahl (wenn ein Tag ausgewählt wird)
   const handleSelectSlot = ({ start }) => {
     setSelectedDate(start);
     setShowModal(true);
   };
 
-  // Termine für den ausgewählten Tag filtern
   const getEventsForDate = (date) => {
-    return events.filter(event => 
-      new Date(event.start).toDateString() === new Date(date).toDateString()
+    return events.filter(
+      (event) =>
+        new Date(event.start).toDateString() === new Date(date).toDateString()
     );
   };
 
-  // Handler für das Hinzufügen eines neuen Termins
   const handleAddEvent = () => {
     if (newEvent.title) {
       setEvents([...events, { ...newEvent, id: uuidv4() }]);
@@ -95,21 +86,26 @@ const Calendar = () => {
         title: '',
         start: selectedDate,
         end: selectedDate,
-        color: 'event-blue'
+        color: 'event-blue',
       });
     }
   };
 
-  // Event Style Getter
   const eventStyleGetter = (event) => ({
-    className: event.color || 'event-blue'
+    className: event.color || 'event-blue',
   });
+
+  const onAddEvent = (newEvent) => {
+    const updatedEvents = [...events, newEvent];
+    setEvents(updatedEvents);
+    localStorage.setItem('events', JSON.stringify(updatedEvents));
+  };
 
   return (
     <div className="calendar-container">
       <BigCalendar
-        localizer={localizer} // Lokalisierung übergeben
-        culture='de'
+        localizer={localizer}
+        culture="de"
         events={events}
         startAccessor="start"
         endAccessor="end"
@@ -117,28 +113,28 @@ const Calendar = () => {
         selectable
         onSelectSlot={handleSelectSlot}
         eventPropGetter={eventStyleGetter}
-        views={['month']} // Nur Monatsansicht
+        views={['month']}
         defaultView="month"
         date={currentDate}
         onNavigate={(date, view) => {
-          console.log(`Navigated to date: ${date}, view: ${view}`);
           setCurrentDate(date);
         }}
         components={{
-          toolbar: CustomToolbar, // Hier wird die benutzerdefinierte Toolbar eingebunden
+          toolbar: CustomToolbar,
         }}
       />
-<span className="rbc-btn-group justify-content-end mt-3">
+      <span className="rbc-btn-group justify-content-end mt-3">
         <TerminAnlegen
           onAddEvent={(newEvent) => {
-            console.log('Neues Event wird hinzugefügt:', newEvent);
             setEvents([...events, newEvent]);
+          }}
+          onClose={() => {
+            setShowModal(false);
           }}
         />
       </span>
-      {/* Bootstrap Modal */}
-      <Modal 
-        show={showModal} 
+      <Modal
+        show={showModal}
         onHide={() => setShowModal(false)}
         size="lg"
         centered
@@ -149,22 +145,21 @@ const Calendar = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Existierende Termine anzeigen */}
           {selectedDate && getEventsForDate(selectedDate).length > 0 ? (
             <div className="existing-events">
               <h5>Vorhandene Termine:</h5>
               {getEventsForDate(selectedDate).map((event) => (
                 <OverlayTrigger
                   key={event.id}
-                  placement="top" // Position des Tooltips
+                  placement="top"
                   overlay={
                     <Tooltip id={`tooltip-${event.id}`}>
-                      {/* Tooltip-Inhalt: Event-Datensatz */}
                       <div>
                         <strong>Title:</strong> {event.title} <br />
-                        <strong>Start:</strong> {new Date(event.start).toLocaleString()} <br />
-                        <strong>End:</strong> {new Date(event.end).toLocaleString()} <br />
-                        
+                        <strong>Start:</strong>{' '}
+                        {new Date(event.start).toLocaleString()} <br />
+                        <strong>End:</strong>{' '}
+                        {new Date(event.end).toLocaleString()} <br />
                       </div>
                     </Tooltip>
                   }
@@ -172,20 +167,60 @@ const Calendar = () => {
                   <div key={event.id} className="event-item p-2 mb-2">
                     <div className="d-flex align-items-center justify-content-between">
                       <div>
-                        <span className={`event-color-dot ${event.color}`}></span>
+                        <span
+                          className={`event-color-dot ${event.color}`}
+                        ></span>
                         {event.title}
                       </div>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => {
-                          if (window.confirm('Möchten Sie diesen Termin wirklich löschen?')) {
-                            setEvents(events.filter((e) => e.id !== event.id));
+                      <div className="d-flex gap-2">
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`tooltip-delete-${event.id}`}>
+                              Löschen
+                            </Tooltip>
                           }
-                        }}
-                      >
-                        Löschen
-                      </Button>
+                        >
+                          <Button
+                            variant="danger"
+                            onClick={() => handleDelete(event.id)}
+                          >
+                            <i className="bi bi-trash"></i>
+                          </Button>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`tooltip-edit-${event.id}`}>
+                              Bearbeiten
+                            </Tooltip>
+                          }
+                        >
+                          <Button
+                            variant="warning"
+                            onClick={() => handleEdit(event.id)}
+                          >
+                            <i className="bi bi-wrench"></i>
+                          </Button>
+                        </OverlayTrigger>
+
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id={`tooltip-payment-${event.id}`}>
+                              Abrechnung
+                            </Tooltip>
+                          }
+                        >
+                          <Button
+                            variant="success"
+                            onClick={() => handlePayment(event.id)}
+                          >
+                            <i className="bi bi-currency-euro"></i>
+                          </Button>
+                        </OverlayTrigger>
+                      </div>
                     </div>
                   </div>
                 </OverlayTrigger>
@@ -195,17 +230,15 @@ const Calendar = () => {
             <p>Keine Termine an diesem Tag</p>
           )}
 
-          <TerminAnlegen 
-            onAddEvent={(newEvent) => setEvents([...events, newEvent])} 
-            selectedDate={selectedDate} // Übergabe des ausgewählten Datums
-            onClose={() => setShowModal(false)} // Modal schließen
+          <TerminAnlegen
+            onAddEvent={onAddEvent}
+            selectedDate={selectedDate}
+            onClose={() => {
+              setShowModal(false);
+            }}
           />
-          
         </Modal.Body>
-        <Modal.Footer>
-          
-          
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </Modal>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,20 +7,14 @@ import './css/TerminAnlegen.css';
 import { v4 as uuidv4 } from 'uuid';
 
 const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
-  useEffect(() => {
-    if (!onClose) {
-      console.error("onClose prop is missing!");
-    }
-  }, [onClose]);
-
-  const [showModal, setShowModal] = useState(false); // Modal ist standardmäßig geschlossen
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     type: 'Privat',
     firstName: '',
     lastName: '',
     phone: '',
-    dateFrom: new Date(), // Standardmäßig aktuelles Datum
-    dateTo: new Date(), // Standardmäßig aktuelles Datum
+    dateFrom: new Date(),
+    dateTo: new Date(),
     timeFrom: '',
     timeTo: '',
     vehicle: '',
@@ -29,38 +23,36 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
     info: '',
   });
   const [charCount, setCharCount] = useState(0);
-  const [kmOptions, setKmOptions] = useState([]); // Kilometerpakete für das ausgewählte Fahrzeug
+  const [kmOptions, setKmOptions] = useState([]);
 
-  // Aktualisiere das Startdatum, wenn sich `selectedDate` ändert
+  const vehicleMap = useMemo(() => {
+    const map = new Map();
+    vehicleData.forEach((superCategory) => {
+      superCategory.categories.forEach((category) => {
+        category.vehicles.forEach((vehicle) => {
+          map.set(vehicle.licensePlate, vehicle);
+        });
+      });
+    });
+    return map;
+  }, []);
+
   useEffect(() => {
     if (selectedDate) {
       setFormData((prevFormData) => ({
         ...prevFormData,
         dateFrom: selectedDate,
-        dateTo: selectedDate, // Optional: Enddatum ebenfalls auf das ausgewählte Datum setzen
+        dateTo: selectedDate,
       }));
     }
   }, [selectedDate]);
 
-  // Aktualisiere die Kilometerpakete basierend auf dem ausgewählten Fahrzeug
   useEffect(() => {
-    if (formData.vehicle) {
-      // Suche das ausgewählte Fahrzeug in der vehicle.json
-      const selectedVehicle = vehicleData
-        .flatMap((superCategory) => superCategory.categories)
-        .flatMap((category) => category.vehicles)
-        .find((vehicle) => vehicle.licensePlate === formData.vehicle);
-
-      // Setze die Kilometerpakete, falls das Fahrzeug gefunden wurde
-      if (selectedVehicle && selectedVehicle.kmPackage) {
-        setKmOptions(Object.entries(selectedVehicle.kmPackage));
-      } else {
-        setKmOptions([]); // Keine Kilometerpakete verfügbar
-      }
-    } else {
-      setKmOptions([]); // Keine Kilometerpakete verfügbar
-    }
-  }, [formData.vehicle]);
+    const selectedVehicle = vehicleMap.get(formData.vehicle);
+    setKmOptions(
+      selectedVehicle?.kmPackage ? Object.entries(selectedVehicle.kmPackage) : []
+    );
+  }, [formData.vehicle, vehicleMap]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,20 +67,41 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
     setFormData({ ...formData, [name]: date });
   };
 
+  const isValidForm = () => {
+    if (!formData.firstName || !formData.lastName) {
+      alert('Vorname und Nachname sind erforderlich.');
+      return false;
+    }
+    if (!formData.phone.match(/^\+?[0-9]+$/)) {
+      alert('Bitte geben Sie eine gültige Telefonnummer ein.');
+      return false;
+    }
+    if (formData.dateTo < formData.dateFrom) {
+      alert('Das Enddatum darf nicht vor dem Startdatum liegen.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = () => {
+    if (!isValidForm()) return;
+
     const newEvent = {
-      id: uuidv4(), // Generiere eine eindeutige ID
+      id: uuidv4(),
       title: `${formData.lastName} / ${formData.vehicle}`,
       start: formData.dateFrom,
       end: formData.dateTo,
       color: 'event-blue',
     };
 
+    const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
+    const updatedEvents = [...storedEvents, newEvent];
+    localStorage.setItem('events', JSON.stringify(updatedEvents));
+
     if (onAddEvent) {
-      onAddEvent(newEvent); // Event an den Kalender übergeben
+      onAddEvent(newEvent);
     }
 
-    // Formular zurücksetzen
     setFormData({
       type: 'Privat',
       firstName: '',
@@ -104,21 +117,43 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
       info: '',
     });
 
-    setCharCount(0); // Zeichenzähler zurücksetzen
-    setShowModal(false); // Modal schließen
-    onClose(); // Schließt das Modal im Elternkomponenten
+    setCharCount(0);
+    setShowModal(false);
+
+    if (typeof onClose === 'function') {
+      onClose();
+    }
+  };
+
+  const handleClose = () => {
+    if (typeof onClose === 'function') {
+      onClose();
+    }
+    setFormData({
+      type: 'Privat',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      dateFrom: new Date(),
+      dateTo: new Date(),
+      timeFrom: '',
+      timeTo: '',
+      vehicle: '',
+      km: '',
+      additionalKm: '',
+      info: '',
+    });
   };
 
   return (
     <>
-      {/* Button zum Öffnen des Modals */}
       <Button variant="primary" onClick={() => setShowModal(true)}>
+        <i className="bi bi-plus-circle" style={{ marginRight: '8px' }}></i>
         Termin hinzufügen
       </Button>
 
-      {/* Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header >
+        <Modal.Header>
           <Modal.Title>Neuen Termin hinzufügen</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{ backgroundColor: 'aliceblue' }}>
@@ -304,7 +339,7 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={onClose}>
+          <Button variant="secondary" onClick={handleClose}>
             Abbrechen
           </Button>
           <Button variant="primary" onClick={handleSubmit}>

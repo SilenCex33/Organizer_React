@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import Login from './components/Login'
-import SplashScreen from './components/SplashScreen'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import './App.css';
+import Login from './components/Login';
+import SplashScreen from './components/SplashScreen';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
 import EditorDashboard from './pages/EditorDashboard';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 // Geschützte Route Komponente
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const userRole = localStorage.getItem('userRole');
@@ -70,4 +71,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
