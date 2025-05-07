@@ -3,7 +3,9 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   base: '/Organizer_React/',
-  plugins: [react()],
+  plugins: [
+    react({ jsxRuntime: 'automatic' }), // Nur ein Plugin-Aufruf
+  ],
   build: {
     rollupOptions: {
       output: {
@@ -14,8 +16,8 @@ export default defineConfig({
         },
       },
     },
-    chunkSizeWarningLimit: 1000, // Optional: Erhöht die Warnschwelle
-  }, plugins: [react({ jsxRuntime: 'automatic' })],
+    chunkSizeWarningLimit: 1000,
+  },
 });
 
 
