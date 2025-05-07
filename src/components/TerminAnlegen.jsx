@@ -56,6 +56,14 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Optional: Uhrzeit validieren oder formatieren
+    if (name === 'timeFrom' || name === 'timeTo') {
+      const formattedTime = value; // Hier kannst du ein bestimmtes Format erzwingen
+      setFormData({ ...formData, [name]: formattedTime });
+      return;
+    }
+
     setFormData({ ...formData, [name]: value });
 
     if (name === 'info') {
@@ -80,28 +88,47 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
       alert('Das Enddatum darf nicht vor dem Startdatum liegen.');
       return false;
     }
+    if (formData.dateFrom.getTime() === formData.dateTo.getTime() && formData.timeTo < formData.timeFrom) {
+      alert('Die Endzeit darf nicht vor der Startzeit liegen.');
+      return false;
+    }
+    if (!formData.vehicle) {
+      alert('Bitte wählen Sie ein Fahrzeug aus.');
+      return false;
+    }
+    if (!formData.km) {
+      alert('Bitte wählen Sie ein Kilometerpaket aus.');
+      return false;
+    }
     return true;
   };
 
   const handleSubmit = () => {
     if (!isValidForm()) return;
 
+    // Neues Event erstellen und alle Felder aus formData übernehmen
     const newEvent = {
-      id: uuidv4(),
-      title: `${formData.lastName} / ${formData.vehicle}`,
+      ...formData,
+      id: uuidv4(), // Eindeutige ID für das Event
+      title: `${formData.lastName} / ${formData.vehicle}`, // Titel kann individuell angepasst werden
       start: formData.dateFrom,
       end: formData.dateTo,
-      color: 'event-blue',
+      color: 'event-blue', // Beispielweise eine Standardfarbe
     };
 
+    // Vorhandene Events aus localStorage abrufen
     const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
+
+    // Neues Event hinzufügen und aktualisierten Zustand speichern
     const updatedEvents = [...storedEvents, newEvent];
     localStorage.setItem('events', JSON.stringify(updatedEvents));
 
+    // Übergeordnete Komponente informieren, wenn nötig
     if (onAddEvent) {
       onAddEvent(newEvent);
     }
 
+    // Formular zurücksetzen
     setFormData({
       type: 'Privat',
       firstName: '',
@@ -120,6 +147,7 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
     setCharCount(0);
     setShowModal(false);
 
+    // Modal schließen, wenn onClose definiert ist
     if (typeof onClose === 'function') {
       onClose();
     }

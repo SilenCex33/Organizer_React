@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Calendar as BigCalendar, dateFnsLocalizer } from 'react-big-calendar';
-import format from 'date-fns/format';
+import format from 'date-fns/format'; // Import aus date-fns
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
@@ -59,12 +59,28 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
-    const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
-    setEvents(storedEvents);
+    const storedEvents = localStorage.getItem('events');
+    console.log('Rohdaten aus localStorage beim Laden:', storedEvents);
+
+    const parsedEvents = storedEvents
+      ? JSON.parse(storedEvents).map(event => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end),
+        }))
+      : [];
+    console.log('Geparste Events nach Konvertierung:', parsedEvents);
+
+    setEvents(parsedEvents);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('events', JSON.stringify(events));
+    if (events.length > 0) {
+      console.log('Speichere Events in localStorage:', events);
+      localStorage.setItem('events', JSON.stringify(events));
+    } else {
+      console.log('Keine Events vorhanden. localStorage wird nicht aktualisiert.');
+    }
   }, [events]);
 
   const handleSelectSlot = ({ start }) => {
@@ -81,7 +97,9 @@ const Calendar = () => {
 
   const handleAddEvent = () => {
     if (newEvent.title) {
-      setEvents([...events, { ...newEvent, id: uuidv4() }]);
+      const updatedEvent = { ...newEvent, id: uuidv4() };
+      console.log('Hinzufügen eines neuen Events:', updatedEvent);
+      setEvents([...events, updatedEvent]);
       setNewEvent({
         title: '',
         start: selectedDate,
@@ -100,6 +118,26 @@ const Calendar = () => {
     setEvents(updatedEvents);
     localStorage.setItem('events', JSON.stringify(updatedEvents));
   };
+
+  const handleDelete = (id) => {
+    const updatedEvents = events.filter((event) => event.id !== id);
+    setEvents(updatedEvents);
+    localStorage.setItem('events', JSON.stringify(updatedEvents));
+  };
+
+  const dateTimeFormatter = new Intl.DateTimeFormat('de-DE', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  console.log(events.map(event => ({
+    title: event.title,
+    start: typeof event.start,
+    end: typeof event.end,
+  })));
 
   return (
     <div className="calendar-container">
@@ -130,8 +168,22 @@ const Calendar = () => {
           }}
           onClose={() => {
             setShowModal(false);
-          }}
-        />
+          }}/>
+          <Button
+    variant="danger"
+    className="ms-2"
+    onClick={() => {
+      if (window.confirm("Möchtest du wirklich den gesamten Speicher löschen?")) {
+        localStorage.clear(); // LocalStorage leeren
+        setEvents([]); // Events im State zurücksetzen
+        console.log("LocalStorage wurde geleert.");
+      }
+    }}
+  >
+    <i className="bi bi-trash3"></i> {/* Icon für den Button */}
+    Speicher leeren
+  </Button>
+        
       </span>
       <Modal
         show={showModal}
@@ -156,10 +208,8 @@ const Calendar = () => {
                     <Tooltip id={`tooltip-${event.id}`}>
                       <div>
                         <strong>Title:</strong> {event.title} <br />
-                        <strong>Start:</strong>{' '}
-                        {new Date(event.start).toLocaleString()} <br />
-                        <strong>End:</strong>{' '}
-                        {new Date(event.end).toLocaleString()} <br />
+                        <strong>Start:</strong> {dateTimeFormatter.format(new Date(event.start))} <br />
+                        <strong>End:</strong> {dateTimeFormatter.format(new Date(event.end))} <br />
                       </div>
                     </Tooltip>
                   }

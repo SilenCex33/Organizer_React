@@ -63,6 +63,7 @@ const Login = () => {
           placeholder="Passwort"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete='current-password'
         />
         {error && <div className="error-message">{error}</div>}
         <button type="submit">Anmelden</button>
