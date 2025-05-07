@@ -1,50 +1,58 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importieren Sie useNavigate
+import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase'; // Firestore und Auth importieren
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import './css/Login.css';
 
-// Vordefinierte Benutzer
-const predefinedUsers = [
-  { username: 'admin', password: 'admin123', role: 'Admin' },
-  { username: 'editor', password: 'editor123', role: 'Editor' },
-  { username: 'user', password: 'user123', role: 'User' }
-];
-
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Hook für die Navigation
+  const [userData, setUserData] = useState(null); // Zustand für Nutzerdaten
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Überprüfen der Anmeldedaten
-    const user = predefinedUsers.find(
-      user => user.username === username && user.password === password
-    );
 
-    if (user) {
-      setError('');
-      // Speichern der Benutzerrolle
-      localStorage.setItem('userRole', user.role);
-      localStorage.setItem('username', user.username);
+    try {
+      // Anmeldung mit Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('Eingeloggt als:', user.email);
 
-      // Weiterleitung basierend auf der Rolle
-      switch(user.role) {
-        case 'Admin':
+      // Nutzerdaten aus Firestore laden
+      const docRef = doc(db, 'users', user.uid); // Nutzer-Dokument basierend auf UID
+      const userSnap = await getDoc(docRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        console.log('Nutzerdaten:', userData);
+        setUserData(userData);
+
+        // Speichern von Benutzerdaten im localStorage
+        localStorage.setItem('username', userData.name);
+        localStorage.setItem('role', userData.role);
+
+        // Rollenbasierte Weiterleitung
+        if (userData.role === 'Admin') {
           navigate('/admin-dashboard');
-          break;
-        case 'Editor':
+        } else if (userData.role === 'Editor') {
           navigate('/editor-dashboard');
-          break;
-        case 'User':
-          navigate('/user-dashboard');
-          break;
-        default:
-          navigate('/user-dashboard');
+        } else if (userData.role === 'User') {
+          navigate('/user-dashboard'); 
+        } else {
+          console.error('Unbekannte Rolle:', userData.role);
+          setError('Unbekannte Rolle. Bitte kontaktieren Sie den Support.');
+        }
+        console.log('Aktuelle Benutzerrolle:', userData.role);
+      } else {
+        console.log('Keine Dokumente gefunden');
+        setError('Keine Nutzerdaten gefunden.');
       }
-    } else {
-      setError('Ungültiger Benutzername oder Passwort');
+    } catch (error) {
+      console.error('Login-Fehler:', error.message);
+      setError('Ungültige Anmeldedaten');
     }
   };
 
@@ -52,18 +60,19 @@ const Login = () => {
     <div className="login-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          placeholder="Benutzername" 
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+        <input
+          type="email"
+          placeholder="E-Mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete='username'
         />
-        <input 
-          type="password" 
+        <input
+          type="password"
           placeholder="Passwort"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoComplete='current-password'
+          autoComplete="current-password"
         />
         {error && <div className="error-message">{error}</div>}
         <button type="submit">Anmelden</button>

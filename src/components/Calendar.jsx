@@ -111,6 +111,12 @@ const Calendar = () => {
 
   const eventStyleGetter = (event) => ({
     className: event.color || 'event-blue',
+    style: {
+      display: 'flex',
+      justifyContent: 'center', 
+      alignItems: 'center',    
+      height: '100%',         
+    },
   });
 
   const onAddEvent = (newEvent) => {
