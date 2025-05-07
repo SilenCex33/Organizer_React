@@ -124,7 +124,7 @@ const Calendar = () => {
         }}
       />
       <span className="rbc-btn-group justify-content-end mt-3">
-        <TerminAnlegen
+      <TerminAnlegen
           onAddEvent={(newEvent) => {
             setEvents([...events, newEvent]);
           }}

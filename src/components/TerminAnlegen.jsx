@@ -127,7 +127,7 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
 
   const handleClose = () => {
     if (typeof onClose === 'function') {
-      onClose();
+      onClose(); // Schließt das Modal in der übergeordneten Komponente
     }
     setFormData({
       type: 'Privat',
@@ -143,6 +143,7 @@ const TerminAnlegen = ({ onAddEvent, selectedDate, onClose }) => {
       additionalKm: '',
       info: '',
     });
+    setShowModal(false); // Schließt das Modal in der aktuellen Komponente
   };
 
   return (
